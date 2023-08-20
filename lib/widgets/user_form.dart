@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:finalproject/helpers/form_data_holder.dart';
+import 'package:finalproject/helpers/send_post_data.dart';
 
 class UserForm extends StatefulWidget {
   @override
@@ -7,10 +9,14 @@ class UserForm extends StatefulWidget {
 
 class _UserFormState extends State<UserForm> {
   final formKey = GlobalKey<FormState>();
-  final TextEditingController _namecontroller = TextEditingController();
-  final TextEditingController _idcontroller = TextEditingController();
-  final TextEditingController _emailcontroller = TextEditingController();
-  final TextEditingController _gendercontroller = TextEditingController();
+  final TextEditingController _namecontroller =
+      TextEditingController(text: FormDataHolder.name);
+  final TextEditingController _idcontroller =
+      TextEditingController(text: FormDataHolder.id);
+  final TextEditingController _emailcontroller =
+      TextEditingController(text: FormDataHolder.email);
+  final TextEditingController _gendercontroller =
+      TextEditingController(text: FormDataHolder.gender);
   bool _switchValue = false;
 
   @override
@@ -56,7 +62,11 @@ class _UserFormState extends State<UserForm> {
 
   @override
   void dispose() {
-    _namecontroller.dispose();
+    _namecontroller.clear();
+    _idcontroller.clear();
+    _emailcontroller.clear();
+    _gendercontroller.clear();
+    _switchValue = false;
     super.dispose();
   }
 
@@ -100,6 +110,9 @@ class _UserFormState extends State<UserForm> {
                             controller: _idcontroller,
                             decoration: const InputDecoration(
                                 labelText: 'Enter your id'),
+                            onChanged: (value) {
+                              FormDataHolder.id = _idcontroller.text;
+                            },
                             validator: (value) {
                               if (value!.isEmpty ||
                                   !RegExp(r'^[0-9]{1,6}$').hasMatch(value)) {
@@ -116,6 +129,9 @@ class _UserFormState extends State<UserForm> {
                             controller: _namecontroller,
                             decoration: const InputDecoration(
                                 labelText: 'Enter your name'),
+                            onChanged: (value) {
+                              FormDataHolder.name = _namecontroller.text;
+                            },
                             validator: (value) {
                               if (value!.isEmpty ||
                                   !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
@@ -132,6 +148,9 @@ class _UserFormState extends State<UserForm> {
                             controller: _emailcontroller,
                             decoration: const InputDecoration(
                                 labelText: 'Enter your email'),
+                            onChanged: (value) {
+                              FormDataHolder.email = _emailcontroller.text;
+                            },
                             validator: (value) {
                               if (value!.isEmpty ||
                                   !RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
@@ -148,6 +167,9 @@ class _UserFormState extends State<UserForm> {
                             controller: _gendercontroller,
                             decoration: const InputDecoration(
                                 labelText: 'Enter your gender'),
+                            onChanged: (value) {
+                              FormDataHolder.gender = _namecontroller.text;
+                            },
                             validator: (value) {
                               if (value!.isEmpty ||
                                   !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
@@ -179,7 +201,16 @@ class _UserFormState extends State<UserForm> {
                               padding: const EdgeInsets.all(20.0),
                               child: ElevatedButton(
                                   onPressed: () {
-                                    formKey.currentState!.validate();
+                                    if (formKey.currentState!.validate()) {
+                                      sendPostData(
+                                          FormDataHolder.id,
+                                          FormDataHolder.name,
+                                          FormDataHolder.email,
+                                          FormDataHolder.gender,
+                                          _switchValue.toString(),
+                                          context);
+                                      dispose();
+                                    }
                                   },
                                   child: const Text('Submit')),
                             ),

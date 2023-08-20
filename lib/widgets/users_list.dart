@@ -2,6 +2,7 @@ import 'package:finalproject/screens/new_user.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:finalproject/environments/environments.dart';
 
 class UsersList extends StatefulWidget {
   const UsersList({
@@ -24,8 +25,7 @@ class _UsersListState extends State<UsersList> {
   }
 
   void getData() async {
-    final extractedResult =
-        await http.get(Uri.parse('https://gorest.co.in/public/v2/users'));
+    final extractedResult = await http.get(Uri.parse(Environments.GET_API_URL));
     var result = json.decode(extractedResult.body);
     print(result[0]['id']);
 
