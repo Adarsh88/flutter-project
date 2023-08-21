@@ -21,6 +21,11 @@ class _UserFormState extends State<UserForm> {
 
   @override
   void initState() {
+    _namecontroller.clear();
+    _idcontroller.clear();
+    _emailcontroller.clear();
+    _gendercontroller.clear();
+    _switchValue = false;
     super.initState();
     _namecontroller.addListener(() {
       final String text = _namecontroller.text.toLowerCase();
